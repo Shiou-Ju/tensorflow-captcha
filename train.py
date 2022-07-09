@@ -3,9 +3,13 @@
 import numpy as np
 import os
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras import models
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.losses import categorical_crossentropy
+from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.preprocessing.image import load_img
 
@@ -13,15 +17,14 @@ from tensorflow.keras.preprocessing.image import load_img
 epochs = 10  # 訓練的次數
 img_rows = None  # 驗證碼影像檔的高
 img_cols = None  # 驗證碼影像檔的寬
-digits_in_img = 6  # 驗證碼影像檔中有幾位數
-# TODO:
-# digits_in_img = 4  # 驗證碼影像檔中有幾位數
-x_list = list()  # 存所有驗證碼數字影像檔的array
-y_list = list()  # 存所有的驗證碼數字影像檔array代表的正確數字
-x_train = list()  # 存訓練用驗證碼數字影像檔的array
-y_train = list()  # 存訓練用驗證碼數字影像檔array代表的正確數字
-x_test = list()  # 存測試用驗證碼數字影像檔的array
-y_test = list()  # 存測試用驗證碼數字影像檔array代表的正確數字
+# TODO: migrate to English letters & numbers
+digits_in_img = 4  # 驗證碼影像檔中有幾位數，包含英文小寫
+x_list = list()  # 存所有驗證碼內容影像檔的array
+y_list = list()  # 存所有的驗證碼內容影像檔array代表的正確內容
+x_train = list()  # 存訓練用驗證碼內容影像檔的array
+y_train = list()  # 存訓練用驗證碼內容影像檔array代表的正確內容
+x_test = list()  # 存測試用驗證碼內容影像檔的array
+y_test = list()  # 存測試用驗證碼內容影像檔array代表的正確內容
 
 
 def split_digits_in_img(img_array, x_list, y_list):
@@ -35,8 +38,8 @@ img_filenames = os.listdir('training')
 
 for img_filename in img_filenames:
     # TODO:
-    # if '.jpeg' not in img_filename:
-    if '.png' not in img_filename:
+    # if '.png' not in img_filename:
+    if '.jpeg' not in img_filename:
         continue
     img = load_img('training/{0}'.format(img_filename), color_mode='grayscale')
     img_array = img_to_array(img)
@@ -44,7 +47,21 @@ for img_filename in img_filenames:
     split_digits_in_img(img_array, x_list, y_list)
 
 
-y_list = keras.utils.to_categorical(y_list, num_classes=10)
+# 1-1. ValueError: invalid literal for int() with base 10: 'a'
+# y_list = keras.utils.to_categorical(y_list, num_classes=36)
+
+label_encoder = LabelEncoder()
+vec = label_encoder.fit_transform(y_list)
+
+# 1-2. ValueError: Shapes (None, 36) and (None, 10) are incompatible
+# y_list = keras.utils.to_categorical(vec, num_classes=36)
+
+
+# 1-3. IndexError: index 10 is out of bounds for axis 1 with size 10
+# y_list = keras.utils.to_categorical(vec, num_classes=10)
+
+y_list = to_categorical(vec, num_classes=36)
+
 x_train, x_test, y_train, y_test = train_test_split(x_list, y_list)
 
 
@@ -61,11 +78,16 @@ else:
     model.add(layers.Flatten())
     model.add(layers.Dense(128, activation='relu'))
     model.add(layers.Dropout(rate=0.5))
-    model.add(layers.Dense(10, activation='softmax'))
+    # Modify as per 1-2
+    # Success, low accuracy => val_accuracy: 0.0741
+    # TODO:
+    # But wrong out put: Predicted varification code: [10, 11, 4, 8] (ugsi)
+    # model.add(layers.Dense(10, activation='softmax'))
+    model.add(layers.Dense(36, activation='softmax'))
     print('New model created.')
 
-model.compile(loss=keras.losses.categorical_crossentropy,
-              optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
+model.compile(loss=categorical_crossentropy,
+              optimizer=Adam(), metrics=['accuracy'])
 
 
 model.fit(np.array(x_train), np.array(y_train), batch_size=digits_in_img,

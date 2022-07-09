@@ -1,10 +1,9 @@
 # Learnt from Andy Wu's Note
 # https://notes.andywu.tw/2019/%E7%94%A8tensorflowkeras%E8%A8%93%E7%B7%B4%E8%BE%A8%E8%AD%98%E9%A9%97%E8%AD%89%E7%A2%BC%E7%9A%84cnn%E6%A8%A1%E5%9E%8B/
 
-
-import numpy as np
-import os
 import sys
+import os
+import numpy as np
 from tensorflow.keras import models
 from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.preprocessing.image import load_img
@@ -12,7 +11,7 @@ from tensorflow.keras.preprocessing.image import load_img
 
 img_rows = None
 img_cols = None
-digits_in_img = 6
+digits_in_img = 4
 model = None
 np.set_printoptions(suppress=True, linewidth=150, precision=9,
                     formatter={'float': '{: 0.9f}'.format})
