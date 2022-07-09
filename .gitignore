@@ -134,3 +134,4 @@ dmypy.json
 /testing
 **/**.DS_Store
 **/**.h5
+/.vscode
