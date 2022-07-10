@@ -1,4 +1,4 @@
-# Learnt from Andy Wu's Note
+# Inspired by Andy Wu's Note, please see README.
 # Adjusted to actual needs of analyzing images with English letters and numbers
 
 
