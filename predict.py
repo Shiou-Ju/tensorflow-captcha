@@ -1,5 +1,6 @@
 # Learnt from Andy Wu's Note
-# https://notes.andywu.tw/2019/%E7%94%A8tensorflowkeras%E8%A8%93%E7%B7%B4%E8%BE%A8%E8%AD%98%E9%A9%97%E8%AD%89%E7%A2%BC%E7%9A%84cnn%E6%A8%A1%E5%9E%8B/
+# Adjusted to actual needs of analyzing images with English letters and numbers
+
 
 import os
 import numpy as np
@@ -41,6 +42,7 @@ else:
     print('No trained model found.')
     exit(-1)
 
+# TODO: add batch operation of a folder
 img_filename = input('Varification code img filename: ')
 img = load_img(img_filename, color_mode='grayscale')
 img_array = img_to_array(img)

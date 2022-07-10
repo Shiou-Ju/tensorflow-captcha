@@ -1,12 +1,13 @@
 # Learnt from Andy Wu's Note
-# https://notes.andywu.tw/2019/%E7%94%A8tensorflowkeras%E8%A8%93%E7%B7%B4%E8%BE%A8%E8%AD%98%E9%A9%97%E8%AD%89%E7%A2%BC%E7%9A%84cnn%E6%A8%A1%E5%9E%8B/
+# Adjusted to actual needs of analyzing images with English letters and numbers
+
 
 import numpy as np
 import os
 from sklearn.model_selection import train_test_split
-from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras import models
+# TODO: why should import like this?
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.losses import categorical_crossentropy
 from tensorflow.keras.optimizers import Adam
@@ -15,15 +16,15 @@ from tensorflow.keras.preprocessing.image import load_img
 
 
 epochs = int(input('training epochs: '))
-img_rows = None  # 驗證碼影像檔的高
-img_cols = None  # 驗證碼影像檔的寬
-digits_in_img = 4  # 驗證碼影像檔中有幾位數，包含英文小寫
-x_list = list()  # 存所有驗證碼內容影像檔的array
-y_list = list()  # 存所有的驗證碼內容影像檔array代表的正確內容
-x_train = list()  # 存訓練用驗證碼內容影像檔的array
-y_train = list()  # 存訓練用驗證碼內容影像檔array代表的正確內容
-x_test = list()  # 存測試用驗證碼內容影像檔的array
-y_test = list()  # 存測試用驗證碼內容影像檔array代表的正確內容
+img_rows = None     # 影像檔的高
+img_cols = None     # 影像檔的寬
+digits_in_img = 4   # 影像檔中有幾位數，包含英文小寫
+x_list = list()     # 存所有內容影像檔的 array
+y_list = list()     # 存所有的內容影像檔 array 代表的正確內容
+x_train = list()    # 存訓練用內容影像檔的 array
+y_train = list()    # 存訓練用內容影像檔 array 代表的正確內容
+x_test = list()     # 存測試用內容影像檔的 array
+y_test = list()     # 存測試用內容影像檔 array 代表的正確內容
 
 # 圖片中出現的文字類型
 alphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
